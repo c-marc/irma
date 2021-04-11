@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(tidyverse)
+library(patchwork)
 library(irma)
 ```
 
@@ -28,14 +29,14 @@ p <- 0.2
 se <- 0.8
 sp <- 0.7
 
-dat <- make_data(n, p, se, sp)
+dat <- irma(n, p, se, sp)
 dat
 ```
 
 Check implied parameters (consequence of rounding):
 
 ```{r}
-dat %>% get_param_from_data()
+dat %>% get_param()
 ```
 
 Plot it
@@ -46,7 +47,7 @@ dat %>%
     test=factor(test, labels=c("T-","T+")),
     disease=factor(disease, labels=c("D-","D+"))
   ) %>%
-  autoplot.irma_data(fill_by=disease)
+  plot(fill_by=disease)
 ```
 
 Or the other way:
@@ -57,15 +58,37 @@ dat %>%
     test=factor(test, labels=c("T-","T+")),
     disease=factor(disease, labels=c("D-","D+"))
   ) %>%
-  autoplot.irma_data(fill_by=test)
+  plot(fill_by=test)
 ```
 
 
+Or patchwork:
+
+```{r}
+p1 <- dat %>%
+  mutate(
+    test=factor(test, labels=c("T-","T+")),
+    disease=factor(disease, labels=c("D-","D+"))
+  ) %>%
+  plot(fill_by=disease, n_row=10, wrap = F)
+p2 <- dat %>%
+  mutate(
+    test=factor(test, labels=c("T-","T+")),
+    disease=factor(disease, labels=c("D-","D+"))
+  ) %>%
+  plot(fill_by=disease)
+(p1 + p2)
+```
+
 
 TODO:
-- [ ] Zeallotify
-- [ ] importFrom crazyness
-- [ ] Solve the S3 thing: making data an object of class irma breaks everything
+- [x] De-zeallotify
+- [x] importFrom crazyness
+- [x] Solve the S3 thing: no dispatching for autoplot plot
+- [ ] Default fill_by ?
+- [ ] Control missing arguments for plot
+- [ ] Implement some rlang::abort for irma()
+- [ ] Implement some rlang:: ... message() for irma() using get_param() and glue::glue
 
 TODO shiny:
 - [ ] Allow log10 variations for total
