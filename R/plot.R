@@ -18,7 +18,6 @@ autoplot.irma <- function(dat,
                           wrap = T,
                           n_row = 5,
                           size = 5 / n_row, # default trick
-                          pal = c("bisque4", "firebrick"),
                           title = "Population",
                           ...) {
   # general coding memo : ggplot can overwrite themes and labs, so maybe keep the ... minimal
@@ -45,10 +44,7 @@ autoplot.irma <- function(dat,
   p <- p +
     ggplot2::coord_equal() +
     # coord_equal(expand = FALSE) +
-    ggplot2::scale_fill_manual(
-      name = NULL,
-      values = pal
-    ) +
+    ggplot2::scale_fill_manual(values = c("#377EB8","#E41A1C")) + #brewer Set1, but 2d and 1st
     ggplot2::scale_x_discrete() +
     ggplot2::scale_y_continuous( #+/-.5 to trick ticks where they belong
       labels = function(x) (x - .5) * n_row, # * n_rows

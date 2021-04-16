@@ -1,0 +1,45 @@
+---
+title: "demo_mosaic"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{demo_mosaic}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(tidyverse)
+library(irma)
+```
+
+```{r}
+data <- 
+  expand_grid(x=1:3, y=1:3) %>% 
+  mutate(n = rpois(n(),10))
+
+data_coord <- data %>% get_all_coordinates(x, y)
+```
+## Plot
+
+This is a ggplot object. With opinionated defaults...
+
+
+
+```{r, echo=FALSE}
+ggmosaic_v(data_coord)
+```
+
+# TODO:
+
+- [ ]: split into basic plot and optional geoms:
+  - through arguments ? show.this and .that = F/T ?
+  - through complementary functions ? annotate(what=c("joint","conditional"), where="ul") ?
+- [ ]: default horizontal (maybe the latter option would avoid some repetition)
+- [ ]: add my special 2x2 plot
