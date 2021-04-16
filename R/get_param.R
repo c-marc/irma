@@ -14,7 +14,7 @@ get_param <- function(x) {
 #' - `se`: A numeric: sensitivity
 #' - `sp`: A numeric: specificity
 #' @export
-#'
+#' @importFrom dplyr count mutate filter arrange
 #' @examples
 #' irma(n = 100, p = 50, se = .8, sp = .7) %>% get_param()
 get_param.irma <- function(dat){
@@ -24,14 +24,14 @@ get_param.irma <- function(dat){
     count(disease, wt = n) %>%
     mutate(prop = n/sum(n)) %>%
     filter(disease == 1) %>%
-    chuck("prop") # stricter than pluck
+    pull("prop")
 
   res  <- dat %>%
     group_by(disease) %>%
     mutate(prop = n/sum(n)) %>%
     filter(disease == test) %>% # sp, se
     arrange(disease) %>% # enforce order
-    chuck("prop") # stricter than pluck
+    pull("prop")
   #c(sp, se) %<-% res
   sp <- res[1]; se <- res[2]  # get rid of zeallot dependency ?
 
